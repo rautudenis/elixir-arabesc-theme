@@ -240,7 +240,7 @@
     st.submitted = true;
     setView('done');
     render();
-    var detail = { order_id: j.order_id, order_number: j.order_number, value: j.total, currency: j.currency || 'RON', items: j.items || [], payment: 'cod' };
+    var detail = { order_id: j.order_id, order_number: j.order_number, value: j.total, currency: j.currency || 'RON', items: j.items || [], payment: j.payment || 'cod' };
     try {
       window.dispatchEvent(new CustomEvent('ea:purchase', { detail: detail }));
       window.dataLayer = window.dataLayer || [];
@@ -297,5 +297,17 @@
     render();
   }, 1000);
 
-  if (location.hash === '#ea-order') openModal(); else render();
+  if (C.done) {
+    // Întors de la plata cu cardul: mesajul de mulțumire în modal, ca la ramburs.
+    var dn = C.done;
+    if (LABELS[dn.choice]) st.choice = dn.choice;
+    if (dn.bundle === 1 || dn.bundle === 2) st.bundle = dn.bundle;
+    st.pay = 'card';
+    if (form) { form.elements.name.value = dn.name; form.elements.phone.value = dn.phone; }
+    openModal();
+    var seen = 'ea_done_' + dn.order_id;
+    if (store(seen)) { st.submitted = true; setView('done'); render(); }
+    else { store(seen, '1'); dn.payment = 'card'; onSuccess(dn); }
+    history.replaceState(null, '', location.pathname);
+  } else if (location.hash === '#ea-order') openModal(); else render();
 })();

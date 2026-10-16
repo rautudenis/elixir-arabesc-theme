@@ -241,6 +241,8 @@ function ea_mb_process( $d ) {
 	$order->update_meta_data( '_ea_box_type', $choice );
 	$order->update_meta_data( '_ea_bundle', $bundle );
 	$order->update_meta_data( '_ea_source', 'landing' );
+	$ref = wp_get_raw_referer();
+	$order->update_meta_data( '_ea_landing_url', $ref ? strtok( $ref, '?#' ) : home_url( '/' ) );
 	$order->update_meta_data( '_ea_ship_kind', $ship );
 	$order->update_meta_data( '_ea_terms_accepted', current_time( 'mysql' ) );
 
@@ -302,3 +304,30 @@ function ea_mb_process( $d ) {
 	}
 	return $result;
 }
+
+
+/**
+ * După plata cu cardul, WooCommerce întoarce clientul pe pagina „order-received”.
+ * Pentru comenzile din landing îl trimitem înapoi pe landing, unde modalul arată mesajul de mulțumire
+ * (la fel ca la ramburs). Doar pentru comenzi plătite; plata eșuată/anulată rămâne pe pagina Woo.
+ */
+add_action( 'template_redirect', function () {
+	if ( ! function_exists( 'is_wc_endpoint_url' ) || ! is_wc_endpoint_url( 'order-received' ) ) {
+		return;
+	}
+	$order_id = absint( get_query_var( 'order-received' ) );
+	$order    = $order_id ? wc_get_order( $order_id ) : null;
+	$key      = isset( $_GET['key'] ) ? wc_clean( wp_unslash( $_GET['key'] ) ) : '';
+	if ( ! $order || 'ea_landing' !== $order->get_created_via() || 'cod' === $order->get_payment_method() || ! hash_equals( $order->get_order_key(), $key ) ) {
+		return;
+	}
+	if ( ! $order->has_status( array( 'processing', 'completed', 'on-hold' ) ) ) {
+		return;
+	}
+	$url = (string) $order->get_meta( '_ea_landing_url' );
+	if ( '' === $url ) {
+		return;
+	}
+	wp_safe_redirect( add_query_arg( array( 'ea_done' => $order_id, 'key' => $key ), $url ) );
+	exit;
+}, 5 );

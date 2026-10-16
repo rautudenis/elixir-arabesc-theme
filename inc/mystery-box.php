@@ -119,7 +119,31 @@ function ea_mb_js_config() {
 		);
 	}
 
+	// Întoarcere de la plata cu cardul: datele comenzii pentru mesajul de mulțumire din modal.
+	$done  = null;
+	$d_id  = isset( $_GET['ea_done'] ) ? absint( $_GET['ea_done'] ) : 0; // phpcs:ignore WordPress.Security.NonceVerification
+	$d_key = isset( $_GET['key'] ) ? wc_clean( wp_unslash( $_GET['key'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification
+	$d_ord = ( $d_id && function_exists( 'wc_get_order' ) ) ? wc_get_order( $d_id ) : null;
+	if ( $d_ord && 'ea_landing' === $d_ord->get_created_via() && hash_equals( $d_ord->get_order_key(), $d_key ) && $d_ord->has_status( array( 'processing', 'completed', 'on-hold' ) ) ) {
+		$d_items = array();
+		foreach ( $d_ord->get_items() as $it ) {
+			$d_items[] = array( 'id' => $it->get_variation_id() ?: $it->get_product_id(), 'name' => $it->get_name(), 'price' => (float) $d_ord->get_item_total( $it ), 'qty' => $it->get_quantity() );
+		}
+		$done = array(
+			'order_id'     => $d_ord->get_id(),
+			'order_number' => $d_ord->get_order_number(),
+			'total'        => (float) $d_ord->get_total(),
+			'currency'     => $d_ord->get_currency(),
+			'name'         => trim( $d_ord->get_billing_first_name() . ' ' . $d_ord->get_billing_last_name() ),
+			'phone'        => $d_ord->get_billing_phone(),
+			'choice'       => (string) $d_ord->get_meta( '_ea_box_type' ),
+			'bundle'       => (int) $d_ord->get_meta( '_ea_bundle' ),
+			'items'        => $d_items,
+		);
+	}
+
 	return array(
+		'done'        => $done,
 		'prices'      => array( 1 => (float) $s['price1'], 2 => (float) $s['price2'], 3 => (float) $s['price3'] ),
 		'basePrice'   => (float) $s['price1'],
 		'courier'     => (float) $s['courier_cost'],
