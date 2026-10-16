@@ -309,5 +309,20 @@
     if (store(seen)) { st.submitted = true; setView('done'); render(); }
     else { store(seen, '1'); dn.payment = 'card'; onSuccess(dn); }
     history.replaceState(null, '', location.pathname);
+  } else if (C.fail) {
+    // Plata cu cardul nu a reușit: formularul reumplut + mesaj, ca să poată încerca din nou.
+    var fl = C.fail, ff = fl.form || {};
+    if (LABELS[fl.choice]) st.choice = fl.choice;
+    if (fl.bundle === 1 || fl.bundle === 2) st.bundle = fl.bundle;
+    if (fl.ship === 'easybox') st.ship = 'easybox';
+    if (form) {
+      ['name', 'phone', 'email', 'county', 'city', 'address'].forEach(function (k) {
+        if (form.elements[k] && ff[k]) form.elements[k].value = ff[k];
+      });
+      if (form.elements.terms) form.elements.terms.checked = true;
+    }
+    openModal();
+    formError('Plata cu cardul nu a fost finalizată (tranzacție refuzată sau anulată). Nu s-a înregistrat comanda. Poți încerca din nou sau alege plata la livrare.');
+    history.replaceState(null, '', location.pathname);
   } else if (location.hash === '#ea-order') openModal(); else render();
 })();

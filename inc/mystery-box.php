@@ -142,8 +142,27 @@ function ea_mb_js_config() {
 		);
 	}
 
+	// Plată cu cardul eșuată/anulată: reumplem formularul ca să poată încerca din nou.
+	$fail  = null;
+	$f_id  = isset( $_GET['ea_fail'] ) ? absint( $_GET['ea_fail'] ) : 0; // phpcs:ignore WordPress.Security.NonceVerification
+	$f_ord = ( $f_id && function_exists( 'wc_get_order' ) ) ? wc_get_order( $f_id ) : null;
+	if ( $f_ord && 'ea_landing' === $f_ord->get_created_via() && hash_equals( $f_ord->get_order_key(), $d_key ) && ! $f_ord->has_status( array( 'processing', 'completed', 'on-hold' ) ) ) {
+		$form = (array) $f_ord->get_meta( '_ea_form' );
+		$fail = array(
+			'order_id' => $f_ord->get_id(),
+			'form'     => $form + array( 'name' => '', 'phone' => '', 'email' => '', 'county' => '', 'city' => '', 'address' => '' ),
+			'choice'   => (string) $f_ord->get_meta( '_ea_box_type' ),
+			'bundle'   => (int) $f_ord->get_meta( '_ea_bundle' ),
+			'ship'     => (string) $f_ord->get_meta( '_ea_ship_kind' ),
+		);
+		if ( $f_ord->has_status( 'pending' ) ) {
+			$f_ord->update_status( 'cancelled', 'Plata cu cardul nu a fost finalizată (client întors în landing).' );
+		}
+	}
+
 	return array(
 		'done'        => $done,
+		'fail'        => $fail,
 		'prices'      => array( 1 => (float) $s['price1'], 2 => (float) $s['price2'], 3 => (float) $s['price3'] ),
 		'basePrice'   => (float) $s['price1'],
 		'courier'     => (float) $s['courier_cost'],
