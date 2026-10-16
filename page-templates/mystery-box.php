@@ -474,7 +474,7 @@ $stars = function ( $n ) {
 						<?php if ( $card ) : ?>
 							<button type="button" class="ea-opt ea-opt--pay" data-ea-pay="card">
 								<span class="ea-opt__radio"><span></span></span>
-								<span class="ea-opt__txt"><span class="ea-opt__title">Card online<?php echo $disc_pct ? ' · −' . esc_html( $disc_pct ) . '%' : ''; ?></span><?php if ( $disc_pct ) : ?><span class="ea-opt__sub ea-opt__sub--ok">Reducere <?php echo esc_html( $disc_pct ); ?>% la plata online cu cardul</span><?php endif; ?></span>
+								<span class="ea-opt__txt"><span class="ea-opt__title">Card online<?php echo $disc_pct ? ' (−' . esc_html( $disc_pct ) . '%)' : ''; ?></span><?php if ( $disc_pct ) : ?><span class="ea-opt__sub ea-opt__sub--ok">Reducere <?php echo esc_html( $disc_pct ); ?>% la plata online cu cardul</span><?php endif; ?></span>
 							</button>
 						<?php endif; ?>
 					</div>
