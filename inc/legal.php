@@ -208,12 +208,13 @@ function ea_withdrawal_submit( WP_REST_Request $req ) {
 		return new WP_REST_Response( array( 'ok' => false, 'message' => 'Nu am putut înregistra cererea. Scrie-ne la ' . $co['email'] . '.' ), 500 );
 	}
 
-	wp_mail( $co['email'], 'Retragere din contract – comanda ' . $f['order'], $body, array( 'Reply-To: ' . $f['name'] . ' <' . $f['email'] . '>' ) );
+	$from = 'From: Elixir Arabesc <contact@elixirarabesc.ro>';
+	wp_mail( $co['email'], 'Retragere din contract – comanda ' . $f['order'], $body, array( $from, 'Reply-To: ' . $f['name'] . ' <' . $f['email'] . '>' ) );
 	wp_mail(
 		$f['email'],
 		'Confirmare primire – declarație de retragere (comanda ' . $f['order'] . ')',
 		"Bună, {$f['name']},\n\nAm primit declarația ta de retragere din contract pentru comanda {$f['order']}, în data de " . wp_date( 'd.m.Y, H:i' ) . ".\nÎți vom trimite instrucțiunile de returnare a coletului. Rambursarea se face în maximum 14 zile de la data la care am fost informați, conform legii.\n\nDetaliile transmise:\n\n{$body}\n{$co['brand']} – {$co['name']}\n{$co['email']}\n",
-		array( 'Reply-To: ' . $co['email'] )
+		array( $from, 'Reply-To: ' . $co['email'] )
 	);
 	return array( 'ok' => true );
 }
