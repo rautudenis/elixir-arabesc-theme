@@ -53,7 +53,20 @@ $current = get_post_field( 'post_name' );
 
 	<main class="ea-legal">
 		<article class="ea-legal__body">
-			<?php the_content(); ?>
+			<?php
+			if ( 'termeni-si-conditii' === $current ) {
+				$co = ea_company();
+				?>
+			<h2>Rolul companiei și entitatea care facturează</h2>
+			<ul class="ea-legal__role">
+				<li><strong>Rolul companiei în comercializare:</strong> <?php echo esc_html( $co['name'] ); ?> acționează în calitate de <strong>comerciant</strong>: vinde în nume și pe cont propriu produsele afișate pe acest site către consumatori. Nu este marketplace, intermediar, distribuitor sau agent al altor vânzători.</li>
+				<li><strong>Entitatea care comercializează produsele și emite factura:</strong> <?php echo esc_html( $co['name'] ); ?>, CUI <?php echo esc_html( $co['cui'] ); ?>, nr. Registrul Comerțului <?php echo esc_html( $co['regcom'] ); ?>, cu sediul în <?php echo esc_html( $co['address'] ); ?>. Factura fiscală pentru fiecare comandă este emisă de această societate, sub denumirea comercială <?php echo esc_html( $co['brand'] ); ?>.</li>
+				<li><strong>Contact:</strong> <a href="mailto:<?php echo esc_attr( $co['email'] ); ?>"><?php echo esc_html( $co['email'] ); ?></a>, <?php echo esc_html( $co['phone'] ); ?>.</li>
+			</ul>
+				<?php
+			}
+			the_content();
+			?>
 		</article>
 	</main>
 
