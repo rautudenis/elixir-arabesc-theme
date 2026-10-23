@@ -17,9 +17,12 @@
     if (window.fbq && T.meta) window.fbq('track', 'Purchase', { value: val, currency: cur, content_ids: ids, content_type: 'product', num_items: (d.items || []).length }, { eventID: 'order-' + d.order_id });
     if (window.ttq) window.ttq.track('PlaceAnOrder', { value: val, currency: cur, content_type: 'product', contents: (d.items || []).map(function (i) { return { content_id: String(i.id), content_name: i.name, quantity: i.qty, price: i.price }; }) });
   }
-  function checkout() {
-    if (window.fbq && T.meta) window.fbq('track', 'InitiateCheckout');
-    if (window.ttq) window.ttq.track('InitiateCheckout');
+  function checkout(ev) {
+    var d = (ev && ev.detail) || {};
+    var val = Number(d.value) || 0, cur = d.currency || 'RON';
+    var ids = (d.items || []).map(function (i) { return String(i.id); });
+    if (window.fbq && T.meta) window.fbq('track', 'InitiateCheckout', { value: val, currency: cur, content_ids: ids, content_type: 'product', num_items: ids.length });
+    if (window.ttq) window.ttq.track('InitiateCheckout', { value: val, currency: cur, content_type: 'product', contents: (d.items || []).map(function (i) { return { content_id: String(i.id), content_name: i.name, quantity: i.qty, price: i.price }; }) });
   }
   function loadPixels() {
     if (loaded) return; loaded = true;

@@ -121,7 +121,7 @@
   /* ---------- modal ---------- */
   function openModal() {
     if (!modal) return;
-    if (!st.open) { st.openedAt = Date.now(); try { window.dispatchEvent(new CustomEvent('ea:checkout')); } catch (e) {} }
+    if (!st.open) { st.openedAt = Date.now(); try { window.dispatchEvent(new CustomEvent('ea:checkout', { detail: { value: C.prices && C.prices[st.bundle] || C.basePrice, currency: 'RON', items: [{ id: C.productId || 'mystery-box', name: 'Mystery Box', qty: 1, price: C.basePrice }] } })); } catch (e) {} }
     st.open = true; st.submitted = false;
     setView('form');
     modal.hidden = false;

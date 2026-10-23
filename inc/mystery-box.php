@@ -165,6 +165,7 @@ function ea_mb_js_config() {
 		'fail'        => $fail,
 		'prices'      => array( 1 => (float) $s['price1'], 2 => (float) $s['price2'], 3 => (float) $s['price3'] ),
 		'basePrice'   => (float) $s['price1'],
+		'productId'   => (int) get_option( 'ea_mb_product_id' ),
 		'courier'     => (float) $s['courier_cost'],
 		'easybox'     => (float) $s['easybox_cost'],
 		'toasts'      => $s['live_toasts'] ? $toasts : array(),
