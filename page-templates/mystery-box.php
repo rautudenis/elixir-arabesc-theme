@@ -259,15 +259,20 @@ $stars = function ( $n ) {
 		</div>
 
 		<?php if ( $s['ugc_grid'] ) : ?>
+			<?php $ugc_def = ea_mb_defaults()['ugc']; ?>
 			<div class="ea-ugc">
-				<?php foreach ( $s['ugc'] as $u ) : ?>
-					<div class="ea-ugc__item">
-						<?php if ( ! empty( $u['image'] ) ) : ?>
-							<img src="<?php echo esc_url( $u['image'] ); ?>" alt="<?php echo esc_attr( $u['label'] ); ?>" loading="lazy">
-						<?php else : ?>
-							<span class="ea-ugc__label"><?php echo esc_html( $u['label'] ); ?></span>
-						<?php endif; ?>
-					</div>
+				<?php foreach ( $s['ugc'] as $i => $u ) :
+					if ( empty( $u['image'] ) && empty( $u['video'] ) && isset( $ugc_def[ $i ] ) ) { $u = $ugc_def[ $i ]; }
+					$vid = ! empty( $u['video'] ); ?>
+				<figure class="ea-ugc__item<?php echo $vid ? ' is-video' : ''; ?>">
+					<?php if ( $vid ) : ?>
+						<video src="<?php echo esc_url( $u['video'] ); ?>"<?php echo ! empty( $u['image'] ) ? ' poster="' . esc_url( $u['image'] ) . '"' : ''; ?> muted loop playsinline preload="metadata" data-ea-ugc-video></video>
+						<button type="button" class="ea-ugc__sound" data-ea-ugc-sound aria-label="Pornește sunetul" aria-pressed="false"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4z"/><path class="ea-ugc__wave" d="M15.5 8.5a5 5 0 0 1 0 7M18.5 5.5a9 9 0 0 1 0 13"/><path class="ea-ugc__mute" d="m16 9 5 6m0-6-5 6"/></svg></button>
+					<?php elseif ( ! empty( $u['image'] ) ) : ?>
+						<img src="<?php echo esc_url( $u['image'] ); ?>" alt="<?php echo esc_attr( $u['label'] ); ?>" loading="lazy">
+					<?php endif; ?>
+					<figcaption class="ea-ugc__cap"><span class="ea-ugc__badge"><?php echo $vid ? '▶ Video client' : '✓ Poză client'; ?></span><span class="ea-ugc__name"><?php echo esc_html( $u['label'] ); ?></span></figcaption>
+				</figure>
 				<?php endforeach; ?>
 			</div>
 		<?php endif; ?>
@@ -303,7 +308,7 @@ $stars = function ( $n ) {
 	<section class="ea-section ea-faq">
 		<h2 class="ea-h2 ea-h2--center ea-h2--faq">Întrebări <em>frecvente</em></h2>
 		<div class="ea-faq__grid">
-			<div class="ea-faq__item"><span class="ea-faq__q">Cât costă în total?</span><span class="ea-faq__a"><?php echo esc_html( $p1 ); ?> cutia cu 4 parfumuri arabești de câte 100 ml, plus livrarea: <?php echo esc_html( $courier ); ?> prin curier sau <?php echo esc_html( $easybox ); ?> la easybox. De la 2 cutii, livrarea e gratuită.</span></div>
+			<div class="ea-faq__item"><span class="ea-faq__q">Cât costă în total?</span><span class="ea-faq__a"><?php echo esc_html( $p1 ); ?> cutia cu 4 parfumuri arabești de câte 100 ml, plus livrarea: <?php echo esc_html( $courier ); ?> prin curier. De la 2 cutii, livrarea e gratuită.</span></div>
 			<div class="ea-faq__item"><span class="ea-faq__q">Cum plătesc?</span><span class="ea-faq__a">La curier, numerar sau card. Dacă preferi, poți plăti online cu cardul<?php echo $disc_pct ? ' și primești o reducere de ' . esc_html( $disc_pct ) . '%' : ''; ?>.</span></div>
 			<div class="ea-faq__item"><span class="ea-faq__q">Pot alege parfumurile?</span><span class="ea-faq__a">Alegi doar pentru cine e cutia. Parfumurile rămân surpriză.</span></div>
 			<div class="ea-faq__item"><span class="ea-faq__q">Primesc două la fel?</span><span class="ea-faq__a">Nu. Cele 4 parfumuri dintr-o cutie sunt diferite.</span></div>
@@ -403,7 +408,7 @@ $stars = function ( $n ) {
 						<span class="ea-group__label">Câte cutii?</span>
 						<button type="button" class="ea-opt is-on" data-ea-bundle="1">
 							<span class="ea-opt__radio"><span></span></span>
-							<span class="ea-opt__txt"><span class="ea-opt__title">1 cutie · 4 parfumuri × 100 ml</span><span class="ea-opt__sub">+ livrare de la <?php echo esc_html( $easybox ); ?></span></span>
+							<span class="ea-opt__txt"><span class="ea-opt__title">1 cutie · 4 parfumuri × 100 ml</span><span class="ea-opt__sub">+ livrare de la <?php echo esc_html( $courier ); ?></span></span>
 							<span class="ea-opt__price"><?php echo esc_html( $p1 ); ?></span>
 						</button>
 						<button type="button" class="ea-opt" data-ea-bundle="2">
@@ -461,7 +466,9 @@ $stars = function ( $n ) {
 						<span class="ea-group__label">Livrare</span>
 						<div class="ea-ship">
 							<button type="button" class="ea-ship__btn is-on" data-ea-ship="courier"><span class="ea-ship__name">Curier la adresă</span><span class="ea-ship__price" data-ea="courierPrice"><?php echo esc_html( $courier ); ?></span></button>
+							<?php /* TODO: reactivează după semnarea contractului cu Sameday (Locker easybox).
 							<button type="button" class="ea-ship__btn" data-ea-ship="easybox"><span class="ea-ship__name">Locker easybox</span><span class="ea-ship__price" data-ea="easyboxPrice"><?php echo esc_html( $easybox ); ?></span></button>
+							*/ ?>
 						</div>
 					</div>
 

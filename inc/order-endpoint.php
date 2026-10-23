@@ -154,7 +154,8 @@ function ea_mb_process( $d ) {
 	$address = sanitize_text_field( $d['address'] ?? '' );
 	$choice  = in_array( $d['choice'] ?? '', array( 'm', 'f', 'x' ), true ) ? $d['choice'] : '';
 	$bundle  = (int) ( $d['bundle'] ?? 0 );
-	$ship    = 'easybox' === ( $d['ship'] ?? '' ) ? 'easybox' : 'courier';
+	// TODO: reactivează easybox după contractul cu Sameday.
+	$ship    = 'courier'; // 'easybox' === ( $d['ship'] ?? '' ) ? 'easybox' : 'courier';
 
 	$errors = array();
 	if ( count( preg_split( '/\s+/u', $name, -1, PREG_SPLIT_NO_EMPTY ) ) < 2 ) {

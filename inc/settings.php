@@ -37,10 +37,10 @@ function ea_mb_defaults() {
 		'review_count'    => 327,
 		'dist'            => array( 88, 9, 2, 1 ),
 		'ugc'             => array(
-			array( 'image' => '', 'label' => 'foto client' ),
-			array( 'image' => '', 'label' => 'foto client' ),
-			array( 'image' => '', 'label' => 'foto client' ),
-			array( 'image' => '', 'label' => 'video unboxing' ),
+			array( 'image' => EA_MB_URI . '/assets/ugc/moonlit-citadel.jpg', 'video' => '', 'label' => 'Moonlit Citadel' ),
+			array( 'image' => EA_MB_URI . '/assets/ugc/labyrinth-mysteries.jpg', 'video' => '', 'label' => 'Labyrinth Mysteries' ),
+			array( 'image' => EA_MB_URI . '/assets/ugc/imperial-crest.jpg', 'video' => '', 'label' => 'Imperial Crest' ),
+			array( 'image' => EA_MB_URI . '/assets/ugc/unboxing-poster.jpg', 'video' => EA_MB_URI . '/assets/ugc/unboxing.mp4', 'label' => 'Unboxing Eyad' ),
 		),
 		'reviews'         => array(
 			array( 'stars' => 5, 'text' => 'Am luat-o pentru mine și soțul. Toate patru miros superb, iar cel cu oud ține de dimineața până seara.', 'name' => 'Andreea M.', 'city' => 'București', 'box' => 'Cutia 2+2' ),
@@ -214,6 +214,7 @@ function ea_mb_sanitize( $in ) {
 	for ( $i = 0; $i < 4; $i++ ) {
 		$out['ugc'][ $i ] = array(
 			'image' => esc_url_raw( $in['ugc'][ $i ]['image'] ?? '' ),
+			'video' => esc_url_raw( $in['ugc'][ $i ]['video'] ?? '' ),
 			'label' => sanitize_text_field( $in['ugc'][ $i ]['label'] ?? '' ),
 		);
 	}
@@ -297,9 +298,10 @@ function ea_mb_render_settings() {
 			<table class="form-table">
 				<?php for ( $i = 0; $i < 4; $i++ ) : $u = $s['ugc'][ $i ]; ?>
 					<tr><th scope="row">Slot <?php echo (int) $i + 1; ?></th><td>
-						<input type="url" class="regular-text ea-ugc-url" name="<?php echo esc_attr( $n ); ?>[ugc][<?php echo (int) $i; ?>][image]" value="<?php echo esc_attr( $u['image'] ); ?>" placeholder="URL imagine">
+						<input type="url" class="regular-text ea-ugc-url" name="<?php echo esc_attr( $n ); ?>[ugc][<?php echo (int) $i; ?>][image]" value="<?php echo esc_attr( $u['image'] ); ?>" placeholder="URL imagine (sau poster video)">
 						<button type="button" class="button ea-pick-media">Alege din Media</button>
-						<input type="text" name="<?php echo esc_attr( $n ); ?>[ugc][<?php echo (int) $i; ?>][label]" value="<?php echo esc_attr( $u['label'] ); ?>" placeholder="Etichetă (când nu e imagine)">
+						<input type="url" class="regular-text" name="<?php echo esc_attr( $n ); ?>[ugc][<?php echo (int) $i; ?>][video]" value="<?php echo esc_attr( $u['video'] ?? '' ); ?>" placeholder="URL video .mp4 (opțional)">
+						<input type="text" name="<?php echo esc_attr( $n ); ?>[ugc][<?php echo (int) $i; ?>][label]" value="<?php echo esc_attr( $u['label'] ); ?>" placeholder="Etichetă / produs">
 					</td></tr>
 				<?php endfor; ?>
 			</table>

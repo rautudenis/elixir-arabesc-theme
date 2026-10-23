@@ -326,3 +326,27 @@
     history.replaceState(null, '', location.pathname);
   } else if (location.hash === '#ea-order') openModal(); else render();
 })();
+
+/* UGC video: pornește la vedere (mut), pauză la ieșire; butonul comută sunetul. */
+(function () {
+  var vids = document.querySelectorAll('[data-ea-ugc-video]');
+  if (!vids.length) return;
+  var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var io = 'IntersectionObserver' in window && !reduce ? new IntersectionObserver(function (es) {
+    es.forEach(function (e) {
+      if (e.isIntersecting) { var p = e.target.play(); if (p && p.catch) p.catch(function () {}); }
+      else e.target.pause();
+    });
+  }, { threshold: 0.5 }) : null;
+  Array.prototype.forEach.call(vids, function (v) {
+    if (io) io.observe(v);
+    var btn = v.parentNode.querySelector('[data-ea-ugc-sound]');
+    if (!btn) return;
+    btn.addEventListener('click', function () {
+      v.muted = !v.muted;
+      btn.setAttribute('aria-pressed', v.muted ? 'false' : 'true');
+      btn.setAttribute('aria-label', v.muted ? 'Pornește sunetul' : 'Oprește sunetul');
+      if (!v.muted && v.paused) v.play();
+    });
+  });
+})();
