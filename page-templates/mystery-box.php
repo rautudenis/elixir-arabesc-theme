@@ -84,8 +84,8 @@ $stars = function ( $n ) {
 					<?php endif; ?>
 				</div>
 
-				<h1 class="ea-hero__title">Patru parfumuri.<br><em>Un singur secret.</em></h1>
-				<p class="ea-hero__lead">Alegi pentru cine e cutia, noi alegem 4 parfumuri arabești diferite. Le descoperi abia când deschizi cutia.</p>
+				<h1 class="ea-hero__title">4 Parfumuri Arăbești<br><em>la Doar <?php echo (int) $s['price1']; ?> LEI</em></h1>
+				<p class="ea-hero__lead">4 sticle de câte <strong>100 ml</strong>, nu mostre. Alegi pentru cine e cutia, plătești la livrare.</p>
 
 
 				<div class="ea-spec">

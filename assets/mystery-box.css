@@ -452,3 +452,22 @@ a.ea-brand{color:inherit}
 
 .ea-page .ea-select{appearance:none;-webkit-appearance:none;cursor:pointer;padding-right:38px;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%237a1f1a' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center}
 .ea-page .ea-select:invalid,.ea-page .ea-select option[value=""]{color:var(--ea-muted)}
+
+/* Titlu pe două rânduri pe mobil, aliniat la stânga. */
+@media (max-width:700px){
+  .ea-hero__title{font-size:clamp(32px,9.2vw,46px);line-height:1.05;letter-spacing:-.5px;text-align:left;text-wrap:wrap}
+  .ea-hero__lead{text-align:left;text-wrap:wrap}
+}
+
+/* Mobil: hero curat (fără cutia „4 × 100 ml", rândul „2 cutii" și bara de stoc). */
+@media (max-width:700px){
+  .ea-hero__copy .ea-spec{display:none}
+  .ea-pricebox__info span:nth-child(3){display:none}
+  .ea-pricebox .ea-stock{display:none}
+}
+
+/* Mobil: fără timerul „Oferta se încheie în…" din topbar. */
+@media (max-width:700px){
+  .ea-topbar > span:has(.ea-topbar__time),
+  .ea-topbar > span:has(.ea-topbar__time) + .ea-topbar__dot{display:none}
+}
