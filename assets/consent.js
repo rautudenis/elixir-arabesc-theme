@@ -10,7 +10,20 @@
   }
 
   /* ---------- pixeli ---------- */
+  /* TikTok cere email trimmed + lowercase și telefon E.164; valorile invalide nu se trimit deloc. */
+  function identify() {
+    if (!window.ttq || !window.ttq.identify) return;
+    var f = document.getElementById('ea-form');
+    if (!f) return;
+    var out = {};
+    var em = f.elements.email ? f.elements.email.value.trim().toLowerCase() : '';
+    if (/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(em)) out.email = em;
+    var ph = f.elements.phone ? f.elements.phone.value.replace(/[\s.()-]/g, '') : '';
+    if (/^(\+?40|0)7\d{8}$/.test(ph)) out.phone_number = '+40' + ph.replace(/^(\+?40|0)/, '');
+    if (out.email || out.phone_number) window.ttq.identify(out);
+  }
   function purchase(ev) {
+    identify();
     var d = (ev && ev.detail) || {};
     var ids = (d.items || []).map(function (i) { return String(i.id); });
     var val = Number(d.value) || 0, cur = d.currency || 'RON';
@@ -18,6 +31,7 @@
     if (window.ttq) window.ttq.track('PlaceAnOrder', { value: val, currency: cur, content_type: 'product', contents: (d.items || []).map(function (i) { return { content_id: String(i.id), content_name: i.name, quantity: i.qty, price: i.price }; }) });
   }
   function checkout(ev) {
+    identify();
     var d = (ev && ev.detail) || {};
     var val = Number(d.value) || 0, cur = d.currency || 'RON';
     var ids = (d.items || []).map(function (i) { return String(i.id); });

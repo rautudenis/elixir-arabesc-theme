@@ -158,7 +158,7 @@
       var inp = form.elements[k]; if (inp) inp.classList.toggle('is-err', !!e[k]);
     });
     var tl = $('[data-ea-terms]'); if (tl) tl.classList.toggle('is-err', !!e.terms);
-    var map = { name: e.name, phone: e.phone, email: e.email, address: e.address || e.city || e.county };
+    var map = { name: e.name, phone: e.phone, email: e.email, address: e.address || e.city || e.county, terms: e.terms };
     $$('[data-ea-err]').forEach(function (n) { n.hidden = !map[n.getAttribute('data-ea-err')]; });
   }
   function formError(msg) {
@@ -283,7 +283,11 @@
     form.addEventListener('submit', submit);
     form.addEventListener('input', function (ev) {
       var k = ev.target.name;
-      if (k === 'terms') { var tl = $('[data-ea-terms]'); if (tl) tl.classList.remove('is-err'); return; }
+      if (k === 'terms') {
+        var tl = $('[data-ea-terms]'); if (tl) tl.classList.remove('is-err');
+        var te = $('[data-ea-err="terms"]'); if (te) te.hidden = true;
+        return;
+      }
       if (!k || !(k in { name: 1, phone: 1, email: 1, county: 1, city: 1, address: 1 })) return;
       ev.target.classList.remove('is-err');
       var map = { name: 'name', phone: 'phone', email: 'email', county: 'address', city: 'address', address: 'address' };

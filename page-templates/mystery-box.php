@@ -497,6 +497,7 @@ $stars = function ( $n ) {
 						<input type="checkbox" name="terms" value="1" data-ea-field="terms">
 						<span>Am citit și sunt de acord cu <a href="<?php echo esc_url( ea_legal_url( 'termeni-si-conditii' ) ); ?>" target="_blank" rel="noopener">Termenii și condițiile</a>, <a href="<?php echo esc_url( ea_legal_url( 'politica-de-confidentialitate' ) ); ?>" target="_blank" rel="noopener">Politica de confidențialitate</a> și <a href="<?php echo esc_url( ea_legal_url( 'retur-si-dreptul-de-retragere' ) ); ?>" target="_blank" rel="noopener">politica de retur</a>.</span>
 					</label>
+					<span class="ea-field__err" data-ea-err="terms" role="alert" <?php echo in_array( 'terms', $err_codes, true ) ? '' : 'hidden'; ?>>Trebuie să fii de acord cu Termenii și condițiile pentru a plasa comanda.</span>
 
 					<div class="ea-form__error" data-ea-formerror hidden></div>
 					<button type="submit" class="ea-submit" data-ea="submitLabel">Comand și plătesc la livrare</button>
